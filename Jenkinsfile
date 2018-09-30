@@ -56,11 +56,9 @@ pipeline {
             }
           }
           container('maven') {
-             withMaven(
-                mavenSettingsConfig: 'settings') {
-                  sh "mvn clean deploy"
-                }
 
+
+            sh 'mvn clean deploy'
 
             sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
 
