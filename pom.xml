@@ -30,10 +30,11 @@
 	<repositories>
 		<repository>
 			<id>confluent</id>
-			<name>Confluent</name>
-			<url>${confluent.maven.repo}</url>
+			<url>http://packages.confluent.io/maven/</url>
 		</repository>
 	</repositories>
+
+
 
 	<dependencies>
 
