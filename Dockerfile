@@ -5,6 +5,7 @@ EXPOSE 8080
 
 # copy pom.xml and wildcards to avoid this command failing if there's no target/lib directory
 COPY pom.xml target/lib* /opt/lib/
+COPY lib* /opt/lib/
 
 # NOTE we assume there's only 1 jar in the target dir
 # but at least this means we don't have to guess the name

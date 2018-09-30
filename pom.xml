@@ -45,19 +45,29 @@
 			<version>${kafka.version}</version>
 		</dependency>
 
-		<!--
-    <dependency>
-        <groupId>kafka-avro-confluent</groupId>
-        <artifactId>kafka-avro-confluent</artifactId>
-        <version>0.1.0</version>
-    </dependency>
-  -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.8.2</version>
+        </dependency>
 
-		<dependency>
-			<groupId>io.confluent</groupId>
-			<artifactId>kafka-avro-serializer</artifactId>
-			<version>${confluent.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-avro-serializer</artifactId>
+            <version>${confluent.version}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/kafka-avro-serializer-5.0.0.jar</systemPath>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-avro-serializer</artifactId>
+            <version>${confluent.version}</version>
+        </dependency>
+              -->
+
+
 
 
 		<dependency>
