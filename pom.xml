@@ -27,13 +27,14 @@
 		<kafka.version>2.0.0</kafka.version>
 	</properties>
 
+	<!--
 	<repositories>
 		<repository>
 			<id>confluent</id>
 			<url>http://packages.confluent.io/maven/</url>
 		</repository>
 	</repositories>
-
+	-->
 
 
 	<dependencies>
@@ -44,11 +45,20 @@
 			<version>${kafka.version}</version>
 		</dependency>
 
+		<!--
+    <dependency>
+        <groupId>kafka-avro-confluent</groupId>
+        <artifactId>kafka-avro-confluent</artifactId>
+        <version>0.1.0</version>
+    </dependency>
+  -->
+
 		<dependency>
 			<groupId>io.confluent</groupId>
 			<artifactId>kafka-avro-serializer</artifactId>
 			<version>${confluent.version}</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>io.micrometer</groupId>
