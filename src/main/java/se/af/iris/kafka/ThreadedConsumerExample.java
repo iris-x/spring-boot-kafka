@@ -77,12 +77,12 @@ public class ThreadedConsumerExample {
         properties.put("auto.offset.reset", "latest");
         properties.put("enable.auto.commit", "true");
         properties.put("auto.commit.interval.ms", "3000");
-        properties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        //properties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        //properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
-        //properties.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://sauron.ws.ams.se:8081");
-        //properties.put("key.deserializer", io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
-        //properties.put("value.deserializer", io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
+        properties.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://sauron.ws.ams.se:8081");
+        properties.put("key.deserializer", io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
+        properties.put("value.deserializer", io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
 
 
         return properties;
