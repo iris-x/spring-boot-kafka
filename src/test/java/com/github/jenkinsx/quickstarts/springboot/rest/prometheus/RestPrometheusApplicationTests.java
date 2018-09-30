@@ -1,3 +1,4 @@
+/*
 package com.github.jenkinsx.quickstarts.springboot.rest.prometheus;
 
 import org.junit.Ignore;
@@ -16,3 +17,4 @@ public class RestPrometheusApplicationTests {
 	}
 
 }
+*/

@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import se.af.iris.kafka.ThreadedConsumerExample;
 
 import java.util.Map;
 
@@ -27,8 +28,12 @@ public class RestPrometheusApplication {
         return singletonMap("hello", "kafka avro nexus world");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args)  throws InterruptedException {
 		SpringApplication.run(RestPrometheusApplication.class, args);
+		ThreadedConsumerExample consumerExample = new ThreadedConsumerExample();
+		consumerExample.startConsuming();
+		Thread.sleep(60000 * 10); //Run for one minute
+		consumerExample.stopConsuming();
 	}
 
 }

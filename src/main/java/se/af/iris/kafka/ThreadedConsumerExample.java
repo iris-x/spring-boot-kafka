@@ -1,10 +1,14 @@
 package se.af.iris.kafka;
 
+import com.github.jenkinsx.quickstarts.springboot.rest.prometheus.RestPrometheusApplication;
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Controller;
 
 import java.util.Collections;
 import java.util.Properties;
@@ -12,7 +16,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-
+//@SpringBootApplication
+//@Controller
 public class ThreadedConsumerExample {
 
     private volatile boolean doneConsuming = false;
@@ -23,12 +28,16 @@ public class ThreadedConsumerExample {
     //private static String topic_name = "platsbanken_inloggningar";
 
 
-    public ThreadedConsumerExample(int numberPartitions) {
-        this.numberPartitions = numberPartitions;
+    public ThreadedConsumerExample() {
+
     }
 
 
     public void startConsuming() {
+
+        System.out.println("ThreadedConsumerExample/startConsuming");
+        numberPartitions = 2;
+
         executorService = Executors.newFixedThreadPool(numberPartitions);
         Properties properties = getConsumerProps();
 
@@ -77,21 +86,19 @@ public class ThreadedConsumerExample {
         properties.put("auto.offset.reset", "latest");
         properties.put("enable.auto.commit", "true");
         properties.put("auto.commit.interval.ms", "3000");
-        //properties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        //properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-
         properties.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://sauron.ws.ams.se:8081");
         properties.put("key.deserializer", io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
         properties.put("value.deserializer", io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
-
-
         return properties;
 
     }
 
 
     public static void main(String[] args) throws InterruptedException {
-        ThreadedConsumerExample consumerExample = new ThreadedConsumerExample(2);
+        SpringApplication.run(ThreadedConsumerExample.class, args);
+
+        ThreadedConsumerExample consumerExample = new ThreadedConsumerExample();
+
         consumerExample.startConsuming();
         Thread.sleep(60000 * 10); //Run for one minute
         consumerExample.stopConsuming();
