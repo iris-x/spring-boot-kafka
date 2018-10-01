@@ -1,23 +1,20 @@
 package se.af.iris.kafka;
 
-import com.github.jenkinsx.quickstarts.springboot.rest.prometheus.RestPrometheusApplication;
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Controller;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-//@SpringBootApplication
-//@Controller
 public class ThreadedConsumerExample {
 
     private volatile boolean doneConsuming = false;
@@ -26,6 +23,9 @@ public class ThreadedConsumerExample {
 
     private static String topic_name = "iris_platsannons_visning";
     //private static String topic_name = "platsbanken_inloggningar";
+
+
+    private static AnnonsvisningProducer annonsvisningProducer = new AnnonsvisningProducer();
 
 
     public ThreadedConsumerExample() {
@@ -47,18 +47,26 @@ public class ThreadedConsumerExample {
         }
     }
 
+
     private Runnable getConsumerThread(Properties properties) {
         return () -> {
-            Consumer<String, String> consumer = null;
+            Consumer<String, GenericRecord> consumer = null;
             try {
+
+
                 consumer = new KafkaConsumer<>(properties);
                 consumer.subscribe(Collections.singletonList(topic_name));
                 while (!doneConsuming) {
-                    ConsumerRecords<String, String> records = consumer.poll(5000);
-                    for (ConsumerRecord<String, String> record : records) {
+                    ConsumerRecords<String, GenericRecord> records = consumer.poll(Duration.ofSeconds(5));
+                    for (ConsumerRecord<String, GenericRecord> record : records) {
                         String message = String.format("Consumed: key = %s value = %s with offset = %d partition = %d",
                                 record.key(), record.value(), record.offset(), record.partition());
                         System.out.println(message);
+
+                        String key = record.key();
+
+                        annonsvisningProducer.sendRecord(key,  record.value());
+
                     }
 
                 }
@@ -93,14 +101,12 @@ public class ThreadedConsumerExample {
 
     }
 
-
     public static void main(String[] args) throws InterruptedException {
-        SpringApplication.run(ThreadedConsumerExample.class, args);
 
         ThreadedConsumerExample consumerExample = new ThreadedConsumerExample();
 
         consumerExample.startConsuming();
-        Thread.sleep(60000 * 10); //Run for one minute
+        Thread.sleep(60000 * 1); //Run for one minute
         consumerExample.stopConsuming();
     }
 
