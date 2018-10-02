@@ -15,10 +15,11 @@ public class AnnonsvisningProducer {
     public void sendRecord(String key, GenericRecord value) {
 
         ProducerRecord<String, GenericRecord> record = getRecord("platsannons_visning_test", key, value);
-
+        RecordMetadata metadata = null;
         try {
-            RecordMetadata metadata = producer.send(record).get();
+            metadata = producer.send(record).get();
         } catch (InterruptedException e) {
+            System.out.println(metadata);
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -35,10 +36,10 @@ public class AnnonsvisningProducer {
     // ClusterIP K8s 10.110.215.78
     private static Properties getProperties() {
         Properties properties = new Properties();
-        properties.put("bootstrap.servers", "10.110.215.78:9092");
+        properties.put("bootstrap.sebrvers", "164.135.124.52:9092");
         properties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        properties.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://10.110.215.78:8081");
+        properties.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://10.97.95.101:8081");
         properties.put("key.serializer", io.confluent.kafka.serializers.KafkaAvroSerializer.class);
         properties.put("value.serializer", io.confluent.kafka.serializers.KafkaAvroSerializer.class);
         properties.put("acks", "1");
