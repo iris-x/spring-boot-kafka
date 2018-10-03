@@ -10,7 +10,7 @@ This quickstart exposes the following endpoints important for Kubernetes deploym
 - `/actuator/metrics` - Prometheus metrics. Invoked periodically and collected by Prometheus Kubernetes scraper.
 
 
-## Kafka configuration
+## Kafka configuration test
 
 kafka-topics --zookeeper 10.110.215.78:2181 --list
 kafka-topics --create --zookeeper 10.110.215.78:2181 --replication-factor 1 --partitions 1 --topic platsannons_visning_test
