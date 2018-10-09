@@ -35,11 +35,14 @@ public class AnnonsvisningProducer {
 
     // ClusterIP K8s 10.110.215.78
     private static Properties getProperties() {
+        //String host = "k8s.arbetsformedlingen.se";
+        String host = "localhost";
+
         Properties properties = new Properties();
-        properties.put("bootstrap.sebrvers", "164.135.124.52:9092");
+        properties.put("bootstrap.servers", host + ":9092");
         properties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        properties.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://10.97.95.101:8081");
+        properties.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://" + host + ":8081");
         properties.put("key.serializer", io.confluent.kafka.serializers.KafkaAvroSerializer.class);
         properties.put("value.serializer", io.confluent.kafka.serializers.KafkaAvroSerializer.class);
         properties.put("acks", "1");
