@@ -28,10 +28,12 @@ public class AnnonsvisningRestProducer {
 
     }
 
-    public static void main(String args[]) throws InterruptedException, IOException {
+    public static void main(String args[]) {
 
         AnnonsvisningRestProducer omegaRestClient = new AnnonsvisningRestProducer();
-        JsonAvroMessage jsonMessage = new JsonAvroMessage(genereraAnnonsvisningar(10));
+        List<SpecificRecordBase> annonsvisningar = genereraAnnonsvisningar(10);
+
+        JsonAvroMessage jsonMessage = new JsonAvroMessage(annonsvisningar);
 
         omegaRestClient.sendMessage(jsonMessage.getJsonMessage());
 
