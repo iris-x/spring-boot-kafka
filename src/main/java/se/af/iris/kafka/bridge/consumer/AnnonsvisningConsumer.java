@@ -3,6 +3,7 @@ package se.af.iris.kafka.bridge.consumer;
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.specific.SpecificData;
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -12,7 +13,9 @@ import se.af.iris.kafka.bridge.producer.AnnonsvisningRestProducer;
 import se.arbetsformedlingen.kafka.Annonsvisning;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,26 +64,12 @@ public class AnnonsvisningConsumer {
                 consumer = new KafkaConsumer<>(properties);
                 consumer.subscribe(Collections.singletonList(topic_name));
                 while (!doneConsuming) {
-                    ConsumerRecords<String, GenericRecord> records = consumer.poll(Duration.ofSeconds(5));
-                    for (ConsumerRecord<String, GenericRecord> record : records) {
-                        GenericRecord recordValue = record.value();
+                    ConsumerRecords<String, GenericRecord> consumerRecords = consumer.poll(Duration.ofSeconds(5));
 
-                        Annonsvisning annonsvisning = Annonsvisning.newBuilder()
-                                .setDeviceId(recordValue.get("device_id").toString())
-                                .setSessionId(recordValue.get("session_id").toString())
-                                .setAnnonsId(recordValue.get("annons_id").toString())
-                                .setTidpunkt(Long.parseLong(recordValue.get("tidpunkt").toString()))
-                                .setAnvId(recordValue.get("anv_id") != null ? recordValue.get("anv_id").toString() : null)
-                                .build();
-
-                        Annonsvisning annonsvisning2 = ((Annonsvisning) SpecificData.get().deepCopy(Annonsvisning.getClassSchema(), recordValue));
-
-                        System.out.println(annonsvisning);
-                        System.out.println(annonsvisning2);
-                        annonsvisningProducer.sendMessage(annonsvisning);
-
+                    List<SpecificRecordBase> annonsvisningar = getAnnonsvisningar(consumerRecords);
+                    if (annonsvisningar.size() > 0) {
+                        annonsvisningProducer.sendMessages(annonsvisningar);
                     }
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -90,6 +79,17 @@ public class AnnonsvisningConsumer {
                 }
             }
         };
+    }
+
+    public List<SpecificRecordBase> getAnnonsvisningar(ConsumerRecords<String, GenericRecord> consumerRecords) {
+
+        List<SpecificRecordBase> annonsvisningar = new ArrayList<SpecificRecordBase>();
+        for (ConsumerRecord<String, GenericRecord> consumerRecord : consumerRecords) {
+            GenericRecord recordValue = consumerRecord.value();
+            Annonsvisning annonsvisning = ((Annonsvisning) SpecificData.get().deepCopy(Annonsvisning.getClassSchema(), recordValue));
+            annonsvisningar.add(annonsvisning);
+        }
+        return annonsvisningar;
     }
 
     public void stopConsuming() throws InterruptedException {
