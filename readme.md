@@ -24,9 +24,19 @@ kafka-topics --create --zookeeper 10.110.215.78:2181 --replication-factor 1 --pa
 
 kafka-console-producer --broker-list 164.135.124.52:9092 --topic test
 
+kafka-avro-console-consumer --bootstrap-server omegateam:8082--topic test3-avro-topic
+
 kafka-avro-console-producer \
---broker-list 164.135.124.52:9092 --topic test_avro \
+--broker-list 164.135.124.52:9092 --topic test3_avro_topic \
 --property value.schema='{ "type": "record", "name": "value", "fields": [ {"name": "id", "type": "string", "default": "null"} ] }'
+
+curl -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" \
+      -H "Accept: application/vnd.kafka.v2+json" \
+      --data '{"value_schema": "{\"type\": \"record\", \"name\": \"User\", \"fields\": [{\"name\": \"name\", \"type\": \"string\"}]}", "records": [{"value": {"name": "testUser"}}]}' \
+      "http://omegateam.se:8082/topics/test-avro-topic"
 
 
 {"id": "value1"}
+
+
+

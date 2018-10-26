@@ -14,7 +14,7 @@ public class AnnonsvisningProducer {
 
     public void sendRecord(String key, GenericRecord value) {
 
-        ProducerRecord<String, GenericRecord> record = getRecord("platsannons_visning_test", key, value);
+        ProducerRecord<String, GenericRecord> record = getRecord("annonsvisningar", key, value);
         RecordMetadata metadata = null;
         try {
             metadata = producer.send(record).get();
