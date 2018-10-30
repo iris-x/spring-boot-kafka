@@ -13,7 +13,7 @@ This quickstart exposes the following endpoints important for Kubernetes deploym
 ## Kafka configuration
 
 kafka-topics --zookeeper 10.110.215.78:2181 --list
-kafka-topics --create --zookeeper 10.110.215.78:2181 --replication-factor 1 --partitions 1 --topic platsannons_visning_test
+kafka-topics --create --zookeeper 10.110.215.78:2181 --replication-factor 1 --partitions 1 --topic platsannons_skroll
 
 kafka-avro-console-consumer --bootstrap-server 164.135.124.52:9092 --topic platsannons_visning_test --from-beginning 
 
@@ -24,10 +24,10 @@ kafka-topics --create --zookeeper 10.110.215.78:2181 --replication-factor 1 --pa
 
 kafka-console-producer --broker-list 164.135.124.52:9092 --topic test
 
-kafka-avro-console-consumer --bootstrap-server omegateam:8082--topic test3-avro-topic
+kafka-avro-console-consumer --bootstrap-server omegateam.se:9092--topic my-topic
 
 kafka-avro-console-producer \
---broker-list 164.135.124.52:9092 --topic test3_avro_topic \
+--broker-list omegateam.se:9092 --topic test_topic \
 --property value.schema='{ "type": "record", "name": "value", "fields": [ {"name": "id", "type": "string", "default": "null"} ] }'
 
 curl -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" \

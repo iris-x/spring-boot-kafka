@@ -1,0 +1,47 @@
+
+{"namespace": "se.arbetsformedlingen.kafka",
+ "type": "record",
+ "name": "Ansokning",
+ "fields": [
+     {"name": "device_id", "type":["string", "null"], "default": "null"},
+     {"name": "session_id", "type":["string", "null"], "default": "null"},
+     {"name": "annons_id", "type": "string"},
+     {"name": "tidpunkt", "type": "long", "logicalType": "timestamp-millis"},
+     {"name": "anv_id", "type":["string", "null"], "default": "null"},
+     {"name": "matchningsprofil", "default": null, "type":  [ "null", {
+        "name": "Matchningsprofil",
+        "type": "record",
+            "fields": [
+                {"name": "profilkriterier", "type" : {
+                    "type": "array",
+                         "items": {
+                             "name": "Profilkriterie",
+                             "type": "record",
+                             "fields": [
+                                 {"name":"typ", "type":["string", "null"], "default": "null"},
+                                 {"name":"namn", "type":["string", "null"], "default": "null"},
+                                 {"name":"varde", "type":["string", "null"], "default": "null"},
+                                 {"name": "egenskaper", "type" : {
+                                     "type": "array",
+                                          "items": {
+                                              "name": "Egenskap",
+                                              "type": "record",
+                                              "fields": [
+                                                  {"name": "typ", "type": "string"},
+                                                  {"name": "namn", "type": "string"},
+                                                  {"name": "varde", "type": "string"}
+
+                                              ]
+                                          }
+                                     }
+                                 }
+                             ]
+                         }
+                    }
+                }
+            ]
+        }]
+
+     }
+ ]
+}

@@ -8,7 +8,6 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import se.af.iris.kafka.bridge.producer.AnnonsvisningProducer;
 import se.af.iris.kafka.bridge.producer.AnnonsvisningRestProducer;
 import se.arbetsformedlingen.kafka.Annonsvisning;
 
@@ -21,7 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class AnnonsvisningConsumer {
+public class OmegaConsumer {
 
     private volatile boolean doneConsuming = false;
     private int numberPartitions;
@@ -29,15 +28,12 @@ public class AnnonsvisningConsumer {
 
     private int messageCount;
 
-    private static String topic_name = "iris_platsannons_visning";
+    private static String topic_name = "test3_annonsvisningar";
 
-    //private static AnnonsvisningRestProducer annonsvisningProducer = new AnnonsvisningRestProducer();
-
-    private static AnnonsvisningProducer annonsvisningProducer =
-            new AnnonsvisningProducer("omegateam.se", 19092, "test_annonsvisningar");
+    private static AnnonsvisningRestProducer annonsvisningProducer = new AnnonsvisningRestProducer();
 
 
-    public AnnonsvisningConsumer() {
+    public OmegaConsumer() {
 
     }
 
@@ -69,18 +65,13 @@ public class AnnonsvisningConsumer {
                 while (!doneConsuming) {
                     ConsumerRecords<String, GenericRecord> consumerRecords = consumer.poll(Duration.ofSeconds(5));
 
-                    for (ConsumerRecord<String, GenericRecord> record : consumerRecords) {
-                        annonsvisningProducer.sendRecord(record.key(),  record.value());
-                        System.out.println(record.key() + " : " + record.value());
-                    }
-
-                    /*
                     List<SpecificRecordBase> annonsvisningar = getAnnonsvisningar(consumerRecords);
+                    System.out.println(annonsvisningar);
+                    /*
                     if (annonsvisningar.size() > 0) {
-                        System.out.println("Sending annonsvisningar: " + annonsvisningar.size());
                         annonsvisningProducer.sendMessages(annonsvisningar);
-                    }*/
-
+                    }
+                    */
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -96,6 +87,7 @@ public class AnnonsvisningConsumer {
 
         List<SpecificRecordBase> annonsvisningar = new ArrayList<SpecificRecordBase>();
         for (ConsumerRecord<String, GenericRecord> consumerRecord : consumerRecords) {
+            System.out.println(consumerRecord);
             GenericRecord recordValue = consumerRecord.value();
             Annonsvisning annonsvisning = ((Annonsvisning) SpecificData.get().deepCopy(Annonsvisning.getClassSchema(), recordValue));
             annonsvisningar.add(annonsvisning);
@@ -112,12 +104,12 @@ public class AnnonsvisningConsumer {
 
     private Properties getConsumerProps() {
         Properties properties = new Properties();
-        properties.put("bootstrap.servers", "sauron.ws.ams.se:9092");
-        properties.put("group.id", "stams2-annonsvisning-consumer");
-        properties.put("auto.offset.reset", "latest");
+        properties.put("bootstrap.servers", "omegateam.se:19092");
+        properties.put("group.id", "stams8-annonsvisning-consumer");
+        properties.put("auto.offset.reset", "earliest");
         properties.put("enable.auto.commit", "true");
         properties.put("auto.commit.interval.ms", "3000");
-        properties.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://sauron.ws.ams.se:8081");
+        properties.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://omegateam.se:8081");
         properties.put("key.deserializer", io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
         properties.put("value.deserializer", io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
         return properties;
@@ -126,7 +118,7 @@ public class AnnonsvisningConsumer {
 
     public static void main(String[] args) throws InterruptedException {
 
-        AnnonsvisningConsumer consumerExample = new AnnonsvisningConsumer();
+        OmegaConsumer consumerExample = new OmegaConsumer();
 
         consumerExample.startConsuming();
         Thread.sleep(60000 * 600); //Run for one minute

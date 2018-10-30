@@ -23,7 +23,7 @@ public class AnnonsvisningRestProducer {
     private static final RestTemplate restTemplate = new RestTemplate();
 
     //private static final String url = "http://sauron.ws.ams.se:8082/topics/test-avro-topic";
-    private static final String url = "http://omegateam.se:8082/topics/test_annonsvisningar";
+    private static final String url = "http://omegateam.se:8082/topics/test3_annonsvisningar";
 
     public AnnonsvisningRestProducer() {
         System.out.println(url);
