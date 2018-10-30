@@ -74,7 +74,8 @@ public class AnnonsvisningConsumer {
                         System.out.println(record.key() + " : " + record.value());
                     }
 
-                    /*
+                    /* AnnonsvisningRestProducer
+
                     List<SpecificRecordBase> annonsvisningar = getAnnonsvisningar(consumerRecords);
                     if (annonsvisningar.size() > 0) {
                         System.out.println("Sending annonsvisningar: " + annonsvisningar.size());
